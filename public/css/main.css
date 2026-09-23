@@ -1,0 +1,104 @@
+html,
+body {
+    background-color: lightblue;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+}
+
+body {
+    color: #222;
+
+    header {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    nav {
+        margin-bottom: 30px;
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        li {
+            display: inline;
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 5px;
+
+            &:hover {
+                color: #0066cc;
+                background-color: white;
+            }
+        }
+    }
+
+    main {
+        max-width: 900px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 25px;
+        border-radius: 10px;
+    }
+
+    h1 {
+        margin-top: 0;
+        color: #1f3a5f;
+    }
+
+    h2 {
+        color: #0066cc;
+    }
+
+    p {
+        line-height: 1.6;
+    }
+
+    img.profile {
+        display: block;
+        width: 250px;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        margin: 20px 0;
+    }
+
+    .product-list {
+        display: grid;
+        gap: 20px;
+
+        article {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f5f5f5;
+        }
+    }
+
+    .student-info {
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #f5f5f5;
+
+        p {
+            margin: 10px 0;
+        }
+    }
+
+    footer {
+        max-width: 900px;
+        margin: 30px auto 0;
+        text-align: center;
+    }
+}
