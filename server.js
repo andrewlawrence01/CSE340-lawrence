@@ -1,94 +1,88 @@
-import express from 'express';
-import { fileURLToPath } from 'url';
-import path from 'path';
+import express from 'express'
+import path from 'path'
+import { fileURLToPath } from 'url'
+import routes from './src/controllers/routes.js'
+import { addLocalVariables } from './src/middleware/global.js'
 
-/**
- * Declare Important Variables
- */
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
-const NODE_ENV = process.env.NODE_ENV || 'production';
-const PORT = process.env.PORT || 3000;
+const app = express()
 
-/**
- * Setup Express Server
- */
-const app = express();
+const NODE_ENV = (process.env.NODE_ENV || 'production').toLowerCase()
+const PORT = process.env.PORT || 3000
 
-/**
- * Configure Express
- */
+// Static files
+app.use(express.static(path.join(__dirname, 'public')))
 
-// Serve static files from the public directory
-app.use(express.static(path.join(__dirname, 'public')));
+// View engine
+app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, 'src', 'views'))
 
-// Set EJS as the templating engine
-app.set('view engine', 'ejs');
+// Global middleware
+app.use(addLocalVariables)
 
-// Tell Express where to find the EJS templates
-app.set('views', path.join(__dirname, 'src/views'));
+// Application routes
+app.use('/', routes)
 
-/**
- * Routes
- */
+// 404 handler
+app.use((req, res, next) => {
+    const error = new Error(`Page not found: ${req.originalUrl}`)
+    error.status = 404
+    next(error)
+})
 
-// Home page
-app.get('/', (req, res) => {
-    const title = 'Welcome Home';
+// Global error handler
+app.use((err, req, res, next) => {
+    if (res.headersSent || res.finished) {
+        return next(err)
+    }
 
-    res.render('home', {
-        title
-    });
-});
+    const status = err.status || 500
+    const template = status === 404 ? '404' : '500'
 
-// About page
-app.get('/about', (req, res) => {
-    const title = 'About Me';
+    res.status(status)
 
-    res.render('about', {
-        title
-    });
-});
+    const errorContext = {
+        title: status === 404 ? 'Page Not Found' : 'Server Error',
+        error: err.message || 'An unexpected error occurred.',
+        stack: NODE_ENV === 'development' ? err.stack : null,
+        NODE_ENV
+    }
 
-// Products page
-app.get('/products', (req, res) => {
-    const title = 'Our Products';
+    res.render(`errors/${template}`, errorContext, (renderError, html) => {
+        if (renderError) {
+            res.send(`
+                <h1>${errorContext.title}</h1>
+                <p>${errorContext.error}</p>
+            `)
+            return
+        }
 
-    res.render('products', {
-        title
-    });
-});
+        res.send(html)
+    })
+})
 
-// Student information challenge
-app.get('/student', (req, res) => {
-    const title = 'Student Information';
+// Development WebSocket server
+if (NODE_ENV === 'development') {
+    import('ws').then(({ WebSocketServer }) => {
+        const wsPort = Number(PORT) + 1
+        const wss = new WebSocketServer({ port: wsPort })
 
-    const student = {
-        name: 'Andrew Lawrence',
-        id: '123456',
-        email: 'student@example.com',
-        address: 'Rexburg, Idaho'
-    };
+        wss.on('connection', (ws) => {
+            ws.send('WebSocket connection established.')
 
-    res.render('student', {
-        title,
-        student
-    });
-});
+            ws.on('message', (message) => {
+                console.log(`WebSocket message: ${message}`)
+            })
+        })
 
-/**
- * 404 Handler
- */
-app.use((req, res) => {
-    res.status(404).send('404 - Page Not Found');
-});
+        console.log(`WebSocket server running on port ${wsPort}`)
+    })
+}
 
-/**
- * Start the Server
- */
+// Start server
 app.listen(PORT, () => {
-    console.log(
-        `Server is running in ${NODE_ENV} mode at http://127.0.0.1:${PORT}`
-    );
-});
+    console.log(`Server running on http://localhost:${PORT}`)
+    console.log(`Environment: ${NODE_ENV}`)
+})

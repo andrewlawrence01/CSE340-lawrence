@@ -1,0 +1,76 @@
+<%- include('partials/header') %>
+
+<a href="/catalog">&larr; Back to Course Catalog</a>
+
+<h1>
+    <%= course.id %> - <%= course.title %>
+</h1>
+
+<p>
+    <strong>Department:</strong>
+    <%= course.department %>
+</p>
+
+<p>
+    <strong>Credits:</strong>
+    <%= course.credits %>
+</p>
+
+<p>
+    <%= course.description %>
+</p>
+
+<h2>Course Sections</h2>
+
+<div class="sort-links">
+    <strong>Sort by:</strong>
+
+    <a href="/catalog/<%= course.id %>?sort=time">
+        Time
+    </a>
+
+    <a href="/catalog/<%= course.id %>?sort=professor">
+        Professor
+    </a>
+
+    <a href="/catalog/<%= course.id %>?sort=room">
+        Room
+    </a>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Time</th>
+            <th>Room</th>
+            <th>Professor</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <% course.sections.forEach(section => { %>
+
+            <tr>
+                <td>
+                    <%= section.time %>
+                </td>
+
+                <td>
+                    <%= section.room %>
+                </td>
+
+                <td>
+                    <%= section.professor %>
+                </td>
+            </tr>
+
+        <% }) %>
+    </tbody>
+</table>
+
+<p>
+    Currently sorted by:
+    <strong><%= currentSort %></strong>
+</p>
+
+<%- include('partials/footer') %>

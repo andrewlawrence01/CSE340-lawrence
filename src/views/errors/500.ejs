@@ -1,0 +1,27 @@
+<%- include('../partials/header') %>
+
+<section class="error-page">
+    <h1>500 - Server Error</h1>
+
+    <p>
+        Something went wrong while processing your request.
+    </p>
+
+    <p>
+        <%= error %>
+    </p>
+
+    <% if (stack) { %>
+        <details>
+            <summary>Development Error Details</summary>
+
+            <pre><%= stack %></pre>
+        </details>
+    <% } %>
+
+    <a class="button" href="/">
+        Return Home
+    </a>
+</section>
+
+<%- include('../partials/footer') %>
