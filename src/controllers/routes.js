@@ -3,7 +3,7 @@ import express from 'express';
 import {
     facultyListPage,
     facultyDetailPage
-} from './controllers/faculty/faculty.js';
+} from './faculty/faculty.js';
 
 router.get('/faculty', facultyListPage);
 router.get('/faculty/:facultyId', facultyDetailPage);
