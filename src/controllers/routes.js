@@ -8,8 +8,6 @@ import {
 router.get('/faculty', facultyListPage);
 router.get('/faculty/:facultyId', facultyDetailPage);
 
-import express from 'express'
-
 import { addDemoHeaders } from '../middleware/demo/headers.js'
 
 import {
