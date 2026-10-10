@@ -1,14 +1,22 @@
 import express from 'express';
 
 import {
-    facultyListPage,
-    facultyDetailPage
+facultyListPage,
+facultyDetailPage
 } from './faculty/faculty.js';
 
+import { addDemoHeaders } from '../middleware/demo/headers.js';
+
+const router = express.Router();
+
+// Faculty routes
 router.get('/faculty', facultyListPage);
 router.get('/faculty/:facultyId', facultyDetailPage);
 
-import { addDemoHeaders } from '../middleware/demo/headers.js'
+// Keep your other existing routes below or above these routes.
+// Do not remove your course catalog routes.
+
+export default router;
 
 import {
     catalogPage,
@@ -21,8 +29,6 @@ import {
     demoPage,
     testErrorPage
 } from './index.js'
-
-const router = express.Router()
 
 // Home
 router.get('/', homePage)
@@ -41,5 +47,3 @@ router.get('/demo', addDemoHeaders, demoPage)
 
 // Test error page
 router.get('/test-error', testErrorPage)
-
-export default router
